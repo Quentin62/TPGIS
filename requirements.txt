@@ -4,4 +4,4 @@ matplotlib
 jupyterlab
 pandas
 statsmodels
-seaborns
+seaborn

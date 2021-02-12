@@ -2,11 +2,13 @@
 
 ## Run online
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=nipals.ipynb)
+NIPALS: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=nipals.ipynb)
+
+MICE: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=mice.ipynb)
 
 ## Linux
 
-### Install dependencies using pip3
+### Install dependencies using pip3
 
 In a terminal, run
 

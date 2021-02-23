@@ -6,6 +6,8 @@ NIPALS: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2
 
 MICE: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=mice.ipynb)
 
+Regression: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=regression.ipynb)
+
 ## Linux
 
 ### Install dependencies using pip3

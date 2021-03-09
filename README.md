@@ -8,6 +8,8 @@ MICE: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/g
 
 Regression: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=regression.ipynb)
 
+Effets aléatoires: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=effetAlea.ipynb)
+
 ## Linux
 
 ### Install dependencies using pip3

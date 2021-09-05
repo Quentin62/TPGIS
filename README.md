@@ -10,9 +10,9 @@ MICE : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/
 
 Regression : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=03-regression.ipynb)
 
-Effets aléatoires : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=04-effetAlea.ipynb)
+Effets aléatoires : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=04-effets_aleatoires.ipynb)
 
-Régressions discrètes : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=05-logisticReg.ipynb)
+Régressions discrètes : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=05-regression_discrete.ipynb)
 
 ## Linux
 

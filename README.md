@@ -4,15 +4,11 @@
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master)
 
-NIPALS : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=01-nipals.ipynb)
-
-MICE : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=02-mice.ipynb)
-
-Regression : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=03-regression.ipynb)
-
-Effets aléatoires : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=04-effets_aleatoires.ipynb)
-
-Régressions discrètes : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=05-regression_discrete.ipynb)
+1) NIPALS : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=01-nipals.ipynb)
+1) MICE : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=02-mice.ipynb)
+1) Regression : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=03-regression.ipynb)
+1) Effets aléatoires : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=04-effets_aleatoires.ipynb)
+1) Régressions discrètes : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=05-regression_discrete.ipynb)
 
 ## Linux
 
@@ -30,8 +26,31 @@ pip3 install -r requirements.txt
 
 ### Run jupyter
 
+Go to <https://jupyter.org/> for more information.
+
 In a terminal, run
 
 ``` bash
 jupyter lab
+```
+
+### Convert a jupyter notebook to a pdf
+
+Use [nbconvert](https://nbconvert.readthedocs.io/en/latest/) package.
+
+``` bash
+pip3 install nbconvert
+```
+
+It requires pandoc and latex
+
+``` bash
+sudo apt-get install pandoc
+sudo apt-get install texlive-xetex texlive-fonts-recommended texlive-plain-generic
+```
+
+In your notebook, run all cells and save it. In a terminal, run:
+
+``` bash
+jupyter nbconvert --to pdf my_notebook.ipynb
 ```

@@ -1,6 +1,8 @@
 # TP GIS
 
-## Run online
+GIS4, Modélisation avancée
+
+## Run Jupyter notebook online
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master)
 
@@ -10,9 +12,11 @@
 1) Effets aléatoires : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=04-effets_aleatoires.ipynb)
 1) Régressions discrètes : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=05-regression_discrete.ipynb)
 
-## Linux
+## Run locally
 
-### Install dependencies using pip3
+### Python
+
+#### Install dependencies using pip3
 
 In a terminal, run
 
@@ -24,7 +28,7 @@ sudo apt install python3-pip
 pip3 install -r requirements.txt
 ```
 
-### Run jupyter
+#### Run jupyter
 
 Go to <https://jupyter.org/> for more information.
 
@@ -34,7 +38,7 @@ In a terminal, run
 jupyter lab
 ```
 
-### Convert a jupyter notebook to a pdf
+#### Convert a jupyter notebook to a pdf
 
 Use [nbconvert](https://nbconvert.readthedocs.io/en/latest/) package.
 
@@ -53,4 +57,20 @@ In your notebook, run all cells and save it. In a terminal, run:
 
 ``` bash
 jupyter nbconvert --to pdf my_notebook.ipynb
+```
+
+### R
+
+#### Install
+
+In an R console:
+
+```r
+install.packages(c("mvtnorm", "FactoMineR"))
+```
+
+Running and converting R markdown:
+
+```r
+install.packages(c("knitr", "rmarkdown"))
 ```

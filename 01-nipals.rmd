@@ -82,6 +82,7 @@ NIPALS <- function(X, h = 2, iter = 100) {
   m <- apply(X, 2, mean) # calcul des moyennes # m <- colMeans(X)
   s <- apply(X, 2, sd) * sqrt((n - 1) / n) # calcul des écart-types
   Xr <- (X - rep(1, n) %*% t(m)) / (rep(1, n) %*% t(s))
+  # autre manière: Xr <- scale(X, center = m, scale = s)
 
   # on reserve la place pour:
   CP <- matrix(0, nrow = n, ncol = h) # les composantes principales
@@ -106,7 +107,6 @@ NIPALS <- function(X, h = 2, iter = 100) {
 # la fonction qui calcule CP_1 et FP_1
 calcul_cp_fp <- function(X, iter) {
   cp <- X[, 1]
-  fp <- rep(0, ncol(X))
   for (i in 1:iter) {
     fp <- t(X) %*% cp
     # on normalize fp:

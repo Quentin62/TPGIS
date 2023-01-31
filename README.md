@@ -6,11 +6,15 @@ GIS4, Modélisation avancée
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master)
 
-1) NIPALS : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=01-nipals.ipynb)
+1) NIPALS : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/binder?filepath=01-nipals.ipynb)
 1) MICE : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=02-mice.ipynb)
 1) Regression : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=03-regression.ipynb)
 1) Effets aléatoires : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=04-effets_aleatoires.ipynb)
 1) Régressions discrètes : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=05-regression_discrete.ipynb)
+
+## Run Rstudio online
+
+1) NIPALS : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/binder?urlpath=rstudio?filepath=01-nipals.rmd)
 
 ## Run locally
 

@@ -8,7 +8,7 @@ GIS4, Modélisation avancée
 
 1) NIPALS : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=01-nipals.ipynb)
 1) MICE : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=02-mice.ipynb)
-1) Regression : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=03-regression.ipynb)
+1) Régression : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=03-regression.ipynb)
 1) Effets aléatoires : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=04-effets_aleatoires.ipynb)
 1) Régressions discrètes : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master?filepath=05-regression_discrete.ipynb)
 
@@ -53,7 +53,7 @@ sudo apt-get install pandoc
 sudo apt-get install texlive-xetex texlive-fonts-recommended texlive-plain-generic
 ```
 
-In your notebook, run all cells and save it. In a terminal, run:
+In your notebook, run all cells and save the notebook in pdf. In a terminal, run:
 
 ``` bash
 jupyter nbconvert --to pdf my_notebook.ipynb
@@ -66,7 +66,7 @@ jupyter nbconvert --to pdf my_notebook.ipynb
 In an R console:
 
 ```r
-install.packages(c("mvtnorm", "FactoMineR"))
+install.packages(c("mvtnorm", "FactoMineR", "mice", "VIM", "lattice"))
 ```
 
 Running and converting R markdown:

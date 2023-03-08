@@ -1,0 +1,299 @@
+---
+title: 'TP R : Effets fixes et aléatoires'
+author: "C. Preda"
+date: "le 27 Mars 2018"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Objectif du TP
+
+L'objectif de ce TP est d'introduire les effets aléatoire dans un modèle d'analyse de la variance et plus généralement dans un modèle de régression. On fait appel à ce type d'effets (technique) dans le contexte des mesures répétées ou l'hypothèse d'indépendance des observations n'est plus valide. Nous allons illustrer cela de manière progressive à l'aide d'un exemple. Les packages qu'on va utiliser sont \textbf{nlme} et \textbf{lme4}.
+
+
+### Présentation du problème et des données.
+
+Il s'agit de voir si le passage du sucre dans le sang (absorbtion) est different chez les patients obeses et chez les patients controle (non-obeses). Pour cela, on realise le plan d'expérience suivant : on forme un échantillon aléatoire de 13 patients obeses et un échantillon aléatoire de 20 patients controle. A chaque patient on administre un qunatité fixé de sucre (10mg) et on regarde ensuite la glycémie (unité de mesure non-précisée) à 8 instantes de temps différentes : à $t_0=0$ (avant la dose du sucre), à $t_1=0.5$ heures après la prise de sucre, et puis à $t_2=1$h, $t_3 = 1.5$h, $t_4 = 2$h, $t_5 = 3$h, $t_6 = 4$h et $t_7 = 5$h.
+
+La base de données est disponible en format *csv* (séparateur ";") à l'adresse :
+
+http://math.univ-lille1.fr/~preda/GIS5/glycemie.csv
+
+Remarquez la présence d'un en-tete pour les noms de variables dont un identificateur pour chaque patient (id). Pour des raisons qui seront évidentes plus tard, n'utilisez pas cette colonne comme row.names lors de la lecture des données.
+
+Voici quelques tâches qui vous sont démandées:
+
+#### 1. Statistiques descriptives pour chaque variable temps.
+Preciser notamment la moyenne et l'écart-type.
+
+#### 2. Représentation graphique des données.
+On attend quelques choses du genre :
+
+```{r echo = FALSE, comment=FALSE, message=FALSE}
+d <- read.csv("http://math.univ-lille1.fr/~preda/GIS5/glycemie.csv", header = TRUE, sep = ";", stringsAsFactors = TRUE)
+d$id <- as.factor(d$id)
+t <- c(0, 0.5, 1, 1.5, 2, 3, 4, 5)
+
+matplot(t, t(d[, 3:10]), type = "b", lty = 1, pch = 15, lwd = 1, col = d$groupe, xaxp = c(0, 5, 10), xlab = "temps (h)",
+  ylab = "glycémie", main = "Courbes de glycémie")
+
+abline(v = t, lty = 2, col = "black")
+
+legend("topright", c("controle", "obèse"), lty = c(1, 1), col = unique(d$groupe))
+```
+
+Exemple avec ggplot2. L'important est d'avoir un dataframe au bon format où
+les informations pour grouper ou colorer les individus sont stockées dans une
+ même colonne. On appelle cela le format long et il s'obtient avec la fonction melt par exemple.
+
+```{r echo = FALSE, comment=FALSE, message=FALSE}
+library(ggplot2)
+library(reshape2)
+
+dMelt <- melt(d, id.vars = c("id", "groupe"))
+
+dMelt$temps <- rep(NA, length(dMelt))
+for (i in seq_along(t)) {
+  dMelt$temps[dMelt$variable == paste0("t", i - 1)] <- t[i]
+}
+
+ggplot(data = dMelt, mapping = aes(x = temps, y = value, group = id, colour = groupe)) +
+  geom_line() + geom_point()
+
+ggplot(data = dMelt, mapping = aes(x = variable, y = value, group = groupe, colour = groupe)) +
+  stat_summary(fun = mean, geom = "line")
+
+# on ajoute des facteurs pour obtenir le vrai espacement entre les isntants de temps
+dMelt2 <- dMelt
+dMelt2$variable <- factor(dMelt$temps, levels = seq(0, 5, by = 0.5))
+ggplot(data = dMelt2, mapping = aes(y = value, x = variable, fill = groupe)) +
+  geom_boxplot() +
+  scale_x_discrete(breaks = t, labels = t, drop = FALSE)
+```
+
+#### 3. Comparaison des deux groupes par l'évolution moyenne de la glycémie
+
+On s'interesse à l'évolution moyenne de la glycémie par groupe.
+
+Réaliser les graphiques suivants :
+
+```{r echo = FALSE, comment=FALSE, message=FALSE}
+moyenne_control <- apply(d[d$groupe == "control", 3:10], 2, "mean")
+moyenne_obese <- apply(d[d$groupe == "obese", 3:10], 2, "mean")
+
+matplot(t, cbind(moyenne_control, moyenne_obese), type = "l", col = 1:2)
+abline(v = t, lty = 2, col = "black")
+title("Evolution moyenne des deux groupes ")
+legend("topright", c("control", "obese"), lty = c(1, 1), col = c("black", "red"))
+```
+
+ou encore :
+
+```{r echo = FALSE, comment=FALSE, message=FALSE}
+boxplot(d[which(d$groupe == "control"), -c(1:2)], names = t, ylim = c(min(d[, -c(1, 2)]), max(d[, -c(1, 2)])), xlab = "temps", ylab = "glycémie", add = FALSE, boxfill = "black", boxwex = 0.15, at = t - 0.10)
+
+boxplot(d[which(d$groupe == "obese"), -c(1:2)], xaxt = "n", add = TRUE, boxfill = "red", boxwex = 0.15, at = t + 0.10)
+
+title("Evolution moyenne des deux groupes ")
+legend("topright", c("control", "obese"), pch = c(18, 18), col = c("black", "red"))
+```
+Pour ce dernier graphique, on utilisera surtout les parametres *boxwex*, *at*, *boxfill* et *names* de la fonction *boxplot*.
+
+Elevons le niveau de l'analyse statistiques (et de la discussion) maintenant.
+
+#### 4. Les premièrs tests statistiques pour comparer les groupes.
+
+Pour chaque temps, comparer les deux groupes selon le niveaux moyen de la glycémie.
+
+**Note**: Selon que l'hypothèse de normalité des données est vérifiée (à l'aide du .4942test de Shapiro - fonction *shapiro.test*, on utilisera le test de Student (fonction *t.test*) ou, dans le cas contraire,  le test de Wilcoxon (fonction *wilcox.test*). Pour rappel, les tests de Student et Wilcoxon permetent de vérifier l'hypothèse nulle selon laquelle les deux groupes ont la meme esperance de la glycémie. Le test de Wilcoxon est un test non-paramétrique - c'est-à-dire que son utlisisation n'est pas conditionnée par la loi des donnéees.
+
+Au vue des résultats numériques (et graphiques) il y a donc des differences significatives entre les deux groupes. Alons plus en détail.
+
+```{r echo = FALSE, comment=FALSE, message=FALSE}
+alpha <- 0.05
+for (i in seq_along(t)) {
+  cat(paste0(" ------- Temps t", i - 1, "\n"))
+  out <- shapiro.test(d[[paste0("t", i - 1)]])
+  if (out$p.value > alpha) {
+    print(t.test(d[[paste0("t", i - 1)]][d$groupe == "obese"], d[[paste0("t", i - 1)]][d$groupe == "control"]))
+  } else {
+    print(wilcox.test(d[[paste0("t", i - 1)]][d$groupe == "obese"], d[[paste0("t", i - 1)]][d$groupe == "control"]))
+  }
+}
+```
+
+
+#### Un modèle de régression quadratique
+
+L'évolution de la glycémie en fonction du temps semble une fonction quadratique, c'est à dire une courbe (parabole)  en "U" :
+
+```{r echo = FALSE, comment=FALSE, message=FALSE}
+tt <- seq(0, 5, by = 0.01)
+yy <- 3.91 - 0.83 * tt + 0.15 * tt^2
+plot(tt, yy, xlab = t, ylab = "y(t)", xaxp = c(0, 5, 10), type = "l", lwd = 2)
+```
+
+
+$$y(t) = a +bt +ct^2 + \varepsilon$$
+avec $a$, $b$ et $c$ des coefficients et $\varepsilon$ une erreur aléatoire.
+
+Estimer un modèle de régression quadratique pour chaque groupe séparement. La variable explicative est donc le temps. Il faudrait donc construire cette variable. On transformera donc ces données initiales (dites en format *large*) en format *long* :
+
+```{r echo = FALSE, comment=FALSE, message=FALSE}
+dlong <- reshape(
+  data = d,
+  varying = list(names(d)[3:10]),
+  # idvar = c("id", "groupe"),
+  idvar = c("id"),
+  direction = "long", v.names = "Y"
+)
+
+names(dlong) <- c("groupe", "id", "temps", "Y")
+dlong <- dlong[order(dlong$id), ]
+row.names(dlong) <- 1:nrow(dlong)
+
+# mettons les vrais temps
+dlong[dlong$temps == 1, c("temps")] <- 0
+dlong[dlong$temps == 2, c("temps")] <- 0.5
+dlong[dlong$temps == 3, c("temps")] <- 1
+dlong[dlong$temps == 4, c("temps")] <- 1.5
+dlong[dlong$temps == 5, c("temps")] <- 2
+dlong[dlong$temps == 6, c("temps")] <- 3
+dlong[dlong$temps == 7, c("temps")] <- 4
+dlong[dlong$temps == 8, c("temps")] <- 5
+
+head(dlong, 10)
+```
+
+
+Ceci se réalise facilemnt grace à la fonction *reshape*. Voici le code R:
+
+```{r echo = TRUE, eval=FALSE, comment=FALSE, message=FALSE}
+dlong <- reshape(
+  data = d,
+  varying = list(names(d)[3:10]),
+  # idvar = c("id", "groupe"),
+  idvar = c("id"),
+  direction = "long", v.names = "Y"
+)
+
+head(dlong) # pour voir le resultat brut !
+# Arangeons un peu cela :
+
+names(dlong) <- c("groupe", "id", "temps", "Y")
+dlong <- dlong[order(dlong$id), ]
+row.names(dlong) <- 1:nrow(dlong)
+
+# mettons les vrais temps
+dlong[dlong$temps == 1, c("temps")] <- 0
+dlong[dlong$temps == 2, c("temps")] <- 0.5
+dlong[dlong$temps == 3, c("temps")] <- 1
+dlong[dlong$temps == 4, c("temps")] <- 1.5
+dlong[dlong$temps == 5, c("temps")] <- 2
+dlong[dlong$temps == 6, c("temps")] <- 3
+dlong[dlong$temps == 7, c("temps")] <- 4
+dlong[dlong$temps == 8, c("temps")] <- 5
+
+head(dlong, 10)
+```
+
+Maintenant on peut réaliser un modèle de régression quadratique pour les controles, par exemple.
+
+
+```{r echo = TRUE, comment="", message=FALSE}
+mq_controle <- lm(Y ~ temps + I(temps^2), data = dlong[dlong$groupe == "control", ])
+summary(mq_controle)
+print(shapiro.test(mq_controle$residuals)) # tester la normalité des residus
+library(lmtest)
+print(bptest(mq_controle)) # tester homoscedasticité des residus
+print(dwtest(mq_controle)) # tester l'autocorrelation des residus
+```
+On a donc un problème d\'autocorrelation des residus! Corrélationn due au temps!
+
+Réaliser le meme modèle pour le groupe des obseses et comparer les deux modèles à l'aide des coefficients et des leurs intervalles de confiance. Tracer les deux fonctions de régression sur le meme graphique.
+
+
+```{r echo = TRUE, comment="", message=FALSE}
+mq_obese <- lm(Y ~ temps + I(temps^2), data = dlong[dlong$groupe == "obese", ])
+summary(mq_obese)
+
+# tracage des deux fonctions de regression:
+
+plot(predict(mq_controle, newdata = data.frame(temps = t)),
+  type = "b", col = "black", pch = 16,
+  ylim = c(min(c(moyenne_control, moyenne_obese)), max(c(max(c(moyenne_control, moyenne_obese))))),
+  main = "Fonctions de régression pour les deux groupes",
+  ylab = "Y(t) = b0 +b1*t+c*t^2", xlab = "temps (t)"
+)
+
+lines(predict(mq_obese, newdata = data.frame(temps = t)), type = "b", col = "red", pch = 16)
+
+legend("topright", c("control", "obese"), pch = c(16, 16), col = c("black", "red"))
+```
+
+Comparaison des fonctions de régression:
+
+```{r echo = TRUE, comment="", message=FALSE}
+print(summary(mq_controle)$coefficients)
+print(summary(mq_obese)$coefficients)
+```
+
+
+
+
+
+
+Interpréter le modèle :
+
+```{r echo = TRUE, comment="", message=FALSE}
+mq <- lm(Y ~ groupe * (temps + I(temps^2)), data = dlong)
+summary(mq)
+```
+
+Écrire ce modèle et comparer avec les deux modèles précédents. Qu'observez-vous ?
+
+Est-ce un modèle valide ?
+
+```{r echo = TRUE, comment="", message=FALSE}
+shapiro.test(mq$residuals) # p-value = 0.6341 ok - normalité
+bptest(mq) # p-value = 0.3461 ok - homoscédasticité
+dwtest(mq$residuals ~ dlong$temps) # p-value < 2.2e-16 NON ! residus autocoréllés (y(t) est corellé avec y(t+1) : logique)
+```
+
+Réalisons un modèle mixte basé sur mq. On commence avec la variante la plus simple : intercept aléatoire :
+
+
+```{r echo = TRUE, comment="", message=FALSE}
+library(nlme)
+
+mq_mixte1 <- lme(Y ~ groupe * (temps + I(temps^2)), random = ~ 1 | id, data = dlong, method = "ML")
+summary(mq_mixte1)
+
+## visualiser les effets aléatoirs (alpha_i)
+fixed.effects(mq_mixte1)
+
+## validité du modele
+shapiro.test(mq_mixte1$residuals)
+dwtest(residuals(mq_mixte1) ~ dlong$temps)
+plot(residuals(mq_mixte1))
+```
+
+
+Réalisons un modèle mixte basé sur mq avec intercept et pente aléatoires.
+
+
+```{r echo = TRUE, comment="", message=FALSE}
+mq_mixte2 <- lme(Y ~ groupe * (temps + I(temps^2)), random = ~ temps | id, data = dlong)
+
+summary(mq_mixte2)
+dwtest(residuals(mq_mixte2) ~ dlong$temps)
+bptest(residuals(mq_mixte2) ~ dlong$temps)
+plot(residuals(mq_mixte2) ~ dlong$temps)
+plot(mq_mixte2)
+```

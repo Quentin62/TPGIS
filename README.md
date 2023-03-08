@@ -2,6 +2,13 @@
 
 GIS4, Modélisation avancée
 
+## Python ressources
+
+- MOOC python <https://www.fun-mooc.fr/fr/cours/python-3-des-fondamentaux-aux-concepts-avances-du-langage/>
+- MOOC scikit-learn (by scikit-learn maintainers) <https://www.fun-mooc.fr/fr/cours/machine-learning-python-scikit-learn/>
+- Tuto numpy <https://sebastianraschka.com/blog/2020/numpy-intro.html>
+- Tuto pandas <https://pandas.pydata.org/pandas-docs/stable/user_guide/10min.html>
+
 ## Run Jupyter notebook online
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Quentin62/TPGIS/master)

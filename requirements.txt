@@ -1,8 +1,8 @@
-scipy
-numpy
-scikit-learn>=1.2.0
-matplotlib>=3.6.0
-jupyterlab
-pandas
-statsmodels
-seaborn
+scipy>=1.3.2
+numpy>=1.17.3
+scikit-learn>=1.1.0,<2.0
+matplotlib>=3.6.0,<4.0
+jupyter
+pandas>=1.0
+statsmodels>=0.11
+seaborn>=0.10
